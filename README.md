@@ -125,13 +125,47 @@ for i in ITS1f-ITS2-P01-A01-T8_joined-SR ITS1f-ITS2-P01-B01-T25_joined-SR ITS1f-
   done
 ```
 `query` is the file with the OTUs
+`db` the database we created
+`outfmt` specifies the columns we want in the output file
+`out` is the output file name
+`max_target_seqs` the maximum number of results we allow per OTU
+`num_threads` the number of CPUs the programm is allowed to use
+`may-hsps` specifies that a referenc ehit can show up only once per OTU in the results (else sometimes the beginning of a sequnce and its end match the same reference sequence and it shows up twice in the results)
 
+### 6.3 Assigning Species to each OTU
+With the count files from step 5, the annotations from 6.2 and the taxonomy from 6.1 we can now compile these results and produce a table for each samples that tells us how many reads belong to each OTU and to which species this OTU belongs. 
+We again use a self-made python-script for this
 
+```
+for i in 341F-785R-P01-A01-T8_joined-SR 341F-785R-P01-B01-T25_joined-SR 341F-785R-P01-C01-T34_joined-SR
+  do python blast_to_count_table.py \
+    -d silva -b blast/${i}.blast.out \
+    -t database/SILVA/SILVA_taxonomy.tsv \
+    -c otu_map/${i}.txt \
+    -o count_table_rDNA/${i}.cluster_count_taxonomy.tsv
+  done
 
+for i in ITS1f-ITS2-P01-A01-T8_joined-SR ITS1f-ITS2-P01-B01-T25_joined-SR ITS1f-ITS2-P01-C01-T34_joined-SR
+  do python blast_to_count_table.py \
+    -d unite -b blast/${i}.blast.out \
+    -t database/unite/unite_taxonomy.tsv \
+    -c otu_map/${i}.txt \
+    -o count_table_ITS/${i}.cluster_count_taxonomy.tsv
+  done
+```
 
+Since the taxonomy files for unite and silva look slightly different we have to specify the input type with `-d` as unite or silva (Unite starts at kindom, Silva at domain). `-b` is our blast results file from 6.2. `-t` the taxonomy from 6.1. `-c` are the counts from step 5. And `-o` our output-files (we want them written to the same folder and ending with `.cluster_count_taxonomy.tsv` for step 7.)
 
+## 7. Build Species Matrix
+Finally we build a matrix/table where each line is a species (with full taxonomy) and the columns are the numbers of sequences found belonging to this species in each respective samples. Again we make one for ITS and one for 16s.
 
+```
+python combine_sample_taxonomy_tables_from_folder.py -i count_table_rDNA/ -o species_matrix_rDNA.tsv
+python combine_sample_taxonomy_tables_from_folder.py -i count_table_ITS/ -o species_matrix_ITS.tsv
+```
 
+## 8. Make Bar-Plots
+Loading the `species_matrix_rDNA.tsv` and `species_matrix_ITS.tsv` into R and building bar-charts using ab R-Script called `bar-chart-rDNA.R`
 
 
 
