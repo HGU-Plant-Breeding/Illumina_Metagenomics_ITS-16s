@@ -175,6 +175,7 @@ python combine_sample_taxonomy_tables_from_folder.py -i count_table_ITS/ -o spec
 
 ## 8. Make Bar-Plots
 Loading the `species_matrix_rDNA.tsv` and `species_matrix_ITS.tsv` into R and building bar-charts using ab R-Script called `bar-chart-rDNA.R`
+The script produces absolute and relative abundance bar-charts for all species that were at least 0.5% of all reads in the corresponding sample. The absolute abundance bar charts are not that helpful I believe because the number of reads per sample is quite different in each set, hence also the realtive abundance
 
 
 
