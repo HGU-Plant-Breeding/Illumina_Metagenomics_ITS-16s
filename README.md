@@ -81,7 +81,9 @@ We accept mappings if they are at least a 97% match.
 
 ### 6.1 preparing databases
 I used the SILVA database for the 16s and the UNITE database for the ITS species assignment. Both can be downloaded online 
+
 silva from here [https://www.arb-silva.de/fileadmin/silva_databases/release_138_2/ARB_files/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz](https://www.arb-silva.de/fileadmin/silva_databases/release_138_2/ARB_files/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz)
+
 unite from here [https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229](https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229)
 
 Since they have very sequence long names that include the complete taxonomy starting from kingdom or domain I used two python scripts to split them in a way that I have only the sequnce ID and sequence in the fasta file and the taxonomy for all IDs in a separate file
