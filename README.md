@@ -78,4 +78,62 @@ for i in 341F-785R-P01-A01-T8_joined-SR 341F-785R-P01-B01-T25_joined-SR 341F-785
 We accept mappings if they are at least a 97% match.
 
 ## 6. Assigning a species to the OTUs
-I used the SILVA database for the 16s and the UNITE database for the ITS species assignment. Both can be downloaded 
+
+### 6.1 preparing databases
+I used the SILVA database for the 16s and the UNITE database for the ITS species assignment. Both can be downloaded online 
+silva from here [https://www.arb-silva.de/fileadmin/silva_databases/release_138_2/ARB_files/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz](https://www.arb-silva.de/fileadmin/silva_databases/release_138_2/ARB_files/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz)
+unite from here [https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229](https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229)
+
+Since they have very sequence long names that include the complete taxonomy starting from kingdom or domain I used two python scripts to split them in a way that I have only the sequnce ID and sequence in the fasta file and the taxonomy for all IDs in a separate file
+```
+python reformat_silva_fasta.py -i SILVA_138.2_SSURef_NR99_tax_silva.fasta -o SILVA_reformat.fasta -t SILVA_taxonomy.tsv
+python reformat_unite_fasta.py -i sh_general_release_dynamic_19.02.2025.fasta -o unite_reformatted.fasta -t unite_taxonomy.tsv
+```
+
+Then I used NCBI-BLAST to make a blast compatible database out of both fasta-files
+
+```
+makeblastdb -in SILVA_reformat.fasta -dbtype nucl -out SILVA_reformat -parse_seqids
+makeblastdb -in unite_reformatted.fasta -dbtype nucl -out unite_reformatted -parse_seqids
+```
+### 6.2 Checking OTUs against databases
+Since we have three ITS and three 16s samples we check three against the unite and three against the silva databases we build
+
+```
+for i in 341F-785R-P01-A01-T8_joined-SR 341F-785R-P01-B01-T25_joined-SR 341F-785R-P01-C01-T34_joined-SR
+  do
+    blastn \
+      -query otu/${i}.fasta \
+      -db database/SILVA/SILVA_reformat \
+      -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
+      -out blast/${i}.blast.out \
+      -max_target_seqs 5 \
+      -num_threads 8 \
+      -max_hsps 1
+  done
+
+for i in ITS1f-ITS2-P01-A01-T8_joined-SR ITS1f-ITS2-P01-B01-T25_joined-SR ITS1f-ITS2-P01-C01-T34_joined-SR
+  do
+    blastn \
+      -query otu/${i}.fasta \
+      -db database/unite/unite_reformatted \
+      -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
+      -out blast/${i}.blast.out \
+      -max_target_seqs 5 \
+      -num_threads 8 \
+      -max_hsps 1
+  done
+```
+`query` is the file with the OTUs
+
+
+
+
+
+
+
+
+
+
+
+
