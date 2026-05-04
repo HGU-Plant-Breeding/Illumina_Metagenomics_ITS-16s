@@ -126,12 +126,19 @@ for i in ITS1f-ITS2-P01-A01-T8_joined-SR ITS1f-ITS2-P01-B01-T25_joined-SR ITS1f-
       -max_hsps 1
   done
 ```
+
 `query` is the file with the OTUs
+
 `db` the database we created
+
 `outfmt` specifies the columns we want in the output file
+
 `out` is the output file name
+
 `max_target_seqs` the maximum number of results we allow per OTU
+
 `num_threads` the number of CPUs the programm is allowed to use
+
 `may-hsps` specifies that a referenc ehit can show up only once per OTU in the results (else sometimes the beginning of a sequnce and its end match the same reference sequence and it shows up twice in the results)
 
 ### 6.3 Assigning Species to each OTU
