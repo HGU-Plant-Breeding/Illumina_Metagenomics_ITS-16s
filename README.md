@@ -71,7 +71,7 @@ Now we use the filtered reads from step 1 and map them back to the OTUs
 for i in 341F-785R-P01-A01-T8_joined-SR 341F-785R-P01-B01-T25_joined-SR 341F-785R-P01-C01-T34_joined-SR ITS1f-ITS2-P01-A01-T8_joined-SR ITS1f-ITS2-P01-B01-T25_joined-SR ITS1f-ITS2-P01-C01-T34_joined-SR
   do vsearch \
     --usearch_global filter/${i}.fasta \
-    --db otu/${i}.fasta --id 0.97 otu_map/${i}.txt
+    --db otu/${i}.fasta --id 0.97 --otutabout otu_map/${i}.txt
   done
 ```
 
